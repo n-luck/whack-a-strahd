@@ -2,6 +2,7 @@
   "name": "whack-a-strahd",
   "version": "0.1.0",
   "private": true,
+  "author": "Nadja Luckhaupt",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

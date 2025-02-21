@@ -1,95 +1,91 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
 
-export default function Home() {
+import { useEffect, useState } from "react";
+import { Button } from "../../components/UI/Button";
+import styles from "./page.module.css";
+import Strahd from "../../public/strahd.png";
+import Hole from "../../public/hole.svg";
+import Image from "next/image";
+
+const Home = () => {
+  const [play, setPlay] = useState(false);
+  const [strahd, setStrahd] = useState(Array(9).fill(false));
+  const [score, setScore] = useState(0);
+
+  let timeouts: NodeJS.Timeout[] = []; // Store timeouts to clear later
+
+  const handlePlay = () => {
+    setPlay((prevPlay) => !prevPlay);
+    setScore(0);
+    setStrahd(Array(9).fill(false));
+  };
+
+  useEffect(() => {
+    if (!play) return;
+
+    const intervalId = setInterval(() => {
+      const randomIndex = Math.floor(Math.random() * strahd.length);
+      setStrahd((currentStrahds) => {
+        const newStrahds = [...currentStrahds];
+        newStrahds[randomIndex] = true;
+
+        const timeoutId = setTimeout(() => hideStrahd(randomIndex), 1000);
+        timeouts.push(timeoutId);
+
+        return newStrahds;
+      });
+    }, 1000);
+
+    return () => {
+      clearInterval(intervalId);
+      timeouts.forEach(clearTimeout);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      timeouts = [];
+    };
+  }, [play]);
+
+  const whackHandler = (i: number) => {
+    if (!strahd[i]) return;
+    setScore((prevScore) => prevScore + 1);
+    hideStrahd(i);
+  };
+
+  const hideStrahd = (i: number) => {
+    setStrahd((currentStrahds) => {
+      const newStrahds = [...currentStrahds];
+      newStrahds[i] = false;
+      return newStrahds;
+    });
+  };
+
   return (
     <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      <div className={styles.sky}>
+        <h1 className={styles.title}>Whack a Strahd!</h1>
+        <Button onClick={handlePlay}>{play ? "Stop" : "Start"} Game</Button>
+        <p className={styles.score}>
+          Score: <span className={styles.scoreValue}>{score}</span>
+        </p>
+      </div>
+      <div className={styles.gameGrid}>
+        {strahd.map((isStrahd, i) => (
+          <div
+            className={styles.element}
+            key={i}
+            onClick={() => whackHandler(i)}
           >
             <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+              src={isStrahd ? Strahd : Hole}
+              alt={isStrahd ? "Strahd" : "Hole"}
+              width={100}
+              height={100}
             />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          </div>
+        ))}
+      </div>
+      <div className={styles.grass}></div>
     </div>
   );
-}
+};
+
+export default Home;
