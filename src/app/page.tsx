@@ -8,9 +8,11 @@ import Hole from "../../public/hole.svg";
 import Image from "next/image";
 
 const Home = () => {
+  const counter = 10;
   const [play, setPlay] = useState(false);
   const [strahd, setStrahd] = useState(Array(9).fill(false));
   const [score, setScore] = useState(0);
+  const [countdown, setCountdown] = useState(counter);
 
   let timeouts: NodeJS.Timeout[] = []; // Store timeouts to clear later
 
@@ -29,7 +31,7 @@ const Home = () => {
         const newStrahds = [...currentStrahds];
         newStrahds[randomIndex] = true;
 
-        const timeoutId = setTimeout(() => hideStrahd(randomIndex), 1000);
+        const timeoutId = setTimeout(() => hideStrahd(randomIndex), 500);
         timeouts.push(timeoutId);
 
         return newStrahds;
@@ -42,6 +44,26 @@ const Home = () => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
       timeouts = [];
     };
+  }, [play]);
+
+  useEffect(() => {
+    if (!play) return;
+
+    setCountdown(counter); 
+
+    const interval = setInterval(() => {
+      setCountdown((prevCountdown) => {
+        if (prevCountdown <= 1) {
+          setPlay(false);
+          clearInterval(interval);
+          setCountdown(counter); 
+          return 0;
+        }
+        return prevCountdown - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
   }, [play]);
 
   const whackHandler = (i: number) => {
@@ -58,6 +80,13 @@ const Home = () => {
     });
   };
 
+  useEffect(() => {
+    if (!play) return;
+
+    const timer = setTimeout(() => setPlay(false), counter * 1000);
+    return () => clearTimeout(timer);
+  }, [play]);
+
   return (
     <div className={styles.page}>
       <div className={styles.sky}>
@@ -66,6 +95,7 @@ const Home = () => {
         <p className={styles.score}>
           Score: <span className={styles.scoreValue}>{score}</span>
         </p>
+        <p className={styles.countdown}>Countdown: {countdown}</p>
       </div>
       <div className={styles.gameGrid}>
         {strahd.map((isStrahd, i) => (

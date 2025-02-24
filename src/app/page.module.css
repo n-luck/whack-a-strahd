@@ -68,6 +68,12 @@
   font-weight: bold;
 }
 
+.countdown {
+  color: #fff;
+  font-size: 1.5rem;
+  margin-top: 2rem;
+}
+
 .grass {
   background: hsla(141, 75%, 13%, 1);
   background: linear-gradient(
