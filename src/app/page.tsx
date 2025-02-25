@@ -141,28 +141,34 @@ const Home = () => {
       <div className={styles.sky}>
         <h1 className={styles.title}>Whack a Strahd!</h1>
         <Button onClick={handlePlay}>{play ? "Stop" : "Start"} Game</Button>
-        <p className={styles.score}>
-          Score: <span className={styles.scoreValue}>{score}</span>
-        </p>
-        <p className={styles.countdown}>Countdown: {countdown}</p>
-        <div className={styles.inputContainer}>
-          <input
-            type="text"
-            placeholder="Enter your name"
-            value={playerName}
-            onChange={(e) => setPlayerName(e.target.value)}
-            className={styles.nameInput}
-          />
-        </div>
-        <div className={styles.leaderboard}>
-          <h2>Leaderboard</h2>
-          <ul>
-            {leaderboard.map((entry, index) => (
-              <li key={index}>
-                {index + 1}. {entry.name}: {entry.score} points
-              </li>
-            ))}
-          </ul>
+        <div className={styles.gameInfo}>
+          <div className={styles.gameStats}>
+            <p className={styles.score}>
+              Score: <span className={styles.scoreValue}>{score}</span>
+            </p>
+            <p className={styles.countdown}>Countdown: {countdown}</p>
+          </div>
+          <div className={styles.leaderboardWrapper}>
+            <div className={styles.inputContainer}>
+              <input
+                type="text"
+                placeholder="Enter your name"
+                value={playerName}
+                onChange={(e) => setPlayerName(e.target.value)}
+                className={styles.nameInput}
+              />
+            </div>
+            <div className={styles.leaderboard}>
+              <h2>Leaderboard</h2>
+              <ul>
+                {leaderboard.map((entry, index) => (
+                  <li key={index}>
+                    {index + 1}. {entry.name}: <b>{entry.score} points</b>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
       <div className={styles.gameGrid}>
