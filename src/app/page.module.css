@@ -74,6 +74,15 @@
   margin-top: 2rem;
 }
 
+.leaderboard {
+  color: #fff;
+  margin: 2rem 0;
+}
+
+.leaderboard h2 {
+  margin-bottom: 0.5rem;
+}
+
 .grass {
   background: hsla(141, 75%, 13%, 1);
   background: linear-gradient(
