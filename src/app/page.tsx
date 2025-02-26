@@ -60,6 +60,7 @@ const Home = () => {
 
   useEffect(() => {
     if (!play && score > 0 && playerName.trim()) {
+      console.log("SCORE: ", score);
       const saveScore = async () => {
         try {
           await addDoc(collection(db, "leaderboard"), {
@@ -71,7 +72,11 @@ const Home = () => {
         }
       };
 
-      saveScore();
+      const timeout = setTimeout(() => {
+        saveScore();
+      }, 1000);
+
+      return () => clearTimeout(timeout)
     }
   }, [play, playerName, score]);
 
