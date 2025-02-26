@@ -18,7 +18,7 @@ import {
 import { db } from "../../firebaseConfig";
 
 const Home = () => {
-  const counter = 10;
+  const counter = 20;
   const [play, setPlay] = useState(false);
   const [strahd, setStrahd] = useState(Array(9).fill(false));
   const [score, setScore] = useState(0);
@@ -48,7 +48,7 @@ const Home = () => {
 
         return newStrahds;
       });
-    }, 1000);
+    }, 700);
 
     return () => {
       clearInterval(intervalId);
