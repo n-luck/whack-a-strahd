@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { Button } from "../../components/UI/Button";
 import styles from "./page.module.css";
-import Strahd from "../../public/strahd.png";
-import Hole from "../../public/hole.svg";
+import Strahd from "../../public/vampire.svg";
+import Hole from "../../public/line.svg";
 import Image from "next/image";
 import {
   addDoc,
@@ -43,7 +43,7 @@ const Home = () => {
         const newStrahds = [...currentStrahds];
         newStrahds[randomIndex] = true;
 
-        const timeoutId = setTimeout(() => hideStrahd(randomIndex), 500);
+        const timeoutId = setTimeout(() => hideStrahd(randomIndex), 550);
         timeouts.push(timeoutId);
 
         return newStrahds;
@@ -76,7 +76,7 @@ const Home = () => {
         saveScore();
       }, 1000);
 
-      return () => clearTimeout(timeout)
+      return () => clearTimeout(timeout);
     }
   }, [play, playerName, score]);
 
@@ -183,12 +183,20 @@ const Home = () => {
             key={i}
             onClick={() => whackHandler(i)}
           >
-            <Image
-              src={isStrahd ? Strahd : Hole}
-              alt={isStrahd ? "Strahd" : "Hole"}
-              width={100}
-              height={100}
-            />
+            {isStrahd && (
+              <div className={styles.strahdWrapper}>
+                <Image src={Strahd} alt={"Strahd"} width={100} height={100} />
+              </div>
+            )}
+            <div className={styles.holeWrapper}>
+              <Image
+                src={Hole}
+                alt={"Hole"}
+                width={100}
+                height={100}
+                className={styles.hole}
+              />
+            </div>
           </div>
         ))}
       </div>
